@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+{#	<table class="table table-striped table-hover">#}
+{#		<tbody>#}
+{#		{% for key, value in context.model_data.items() %}#}
+{#			<tr>#}
+{#				<th scope="row">{{ key }}:</th>#}
+{#				<td>{{ value }}</td>#}
+{#			</tr>#}
+{#		{% endfor %}#}
+{#		</tbody>#}
+{#	</table>#}
+	<ul>
+		{% for k, v in phone_data.items() %}
+			{% if v is mapping %}
+				<strong>{{ k }}:</strong>
+				{% for v1 in v %}
+					{{ v1 }}: {{ v[v1] }}
+				{% endfor %}
+			{% else %}
+				<li>{{ k }}: {{ v }}</li>
+			{% endif %}
+		{% endfor %}
+	</ul>
+{#	<ul>#}
+{#		{% for key in (phone_data | list)[:4] %}#}
+{#			<li>{{ key }}: {{ phone_data[key] }}</li>#}
+{#		{% endfor %}#}
+{#	{% for k in phone_data["cpu"] %}#}
+{#		{{ k }}: {{ phone_data["cpu"][k] }}#}
+{#	{% endfor %}#}
+{##}
+{#	</ul>#}
+
+{% endblock %}

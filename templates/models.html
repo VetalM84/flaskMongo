@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>All from {{ context.brand }}</h1>
+	<ol>
+		{% for value in context.models %}
+			<li><a href="/{{ context.brand }}/{{ value["model"] }}">{{ value["model"] }}</a></li>
+		{% endfor %}
+	</ol>
+{% endblock %}
