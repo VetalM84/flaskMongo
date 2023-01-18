@@ -1,9 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-		<ol>
-		{% for value in context %}
-				<li><a href="models/{{ value["brand"] }}">{{ value["brand"] }}</a></li>
-		{% endfor %}
-		</ol>
+	<div class="container text-center">
+		<h1 class="h2">Brands</h1>
+		  <div class="row">
+			  {% for value in context %}
+			    <div class="col">
+				    <a href="models/{{ value }}">{{ value }}</a>
+			    </div>
+			  {% endfor %}
+		  </div>
+  </div>
 {% endblock %}

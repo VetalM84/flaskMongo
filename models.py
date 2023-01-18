@@ -1,15 +1,8 @@
 """Data validators for DB Models."""
 
-from mongoengine import (
-    EmbeddedDocument,
-    Document,
-    StringField,
-    DecimalField,
-    IntField,
-    ListField,
-    EmbeddedDocumentField,
-    BooleanField,
-)
+from mongoengine import (BooleanField, DecimalField, Document,
+                         EmbeddedDocument, EmbeddedDocumentField, IntField,
+                         ListField, StringField)
 
 
 class CPU(EmbeddedDocument):
@@ -18,7 +11,7 @@ class CPU(EmbeddedDocument):
 
 
 class RAM(EmbeddedDocument):
-    volume = StringField()
+    volume = IntField()
     meter = StringField()
     type = StringField()
 
@@ -30,7 +23,7 @@ class WiFi(EmbeddedDocument):
 
 
 class Wireless(EmbeddedDocument):
-    bluetooth = StringField()
+    bluetooth = DecimalField()
     wifi = EmbeddedDocumentField(WiFi)
     gps = BooleanField()
 

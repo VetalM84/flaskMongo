@@ -1,36 +1,50 @@
 {% extends "base.html" %}
 
 {% block content %}
-{#	<table class="table table-striped table-hover">#}
-{#		<tbody>#}
-{#		{% for key, value in context.model_data.items() %}#}
-{#			<tr>#}
-{#				<th scope="row">{{ key }}:</th>#}
-{#				<td>{{ value }}</td>#}
-{#			</tr>#}
-{#		{% endfor %}#}
-{#		</tbody>#}
-{#	</table>#}
-	<ul>
-		{% for k, v in phone_data.items() %}
-			{% if v is mapping %}
-				<strong>{{ k }}:</strong>
-				{% for v1 in v %}
-					{{ v1 }}: {{ v[v1] }}
+<h1 class="h3">{{ brand }} {{ model }}</h1>
+	<ul class="list-unstyled">
+		{% for key, value in phone_data.items() %}
+			{% if value is mapping %}
+				<li class="fw-semibold">{{ key }}:</li>
+				{% for nested_value in value %}
+					<li class="px-4">{{ nested_value }}: {{ value[nested_value] }}</li>
+				{% endfor %}
+			{% elif value is iterable and (value is not string and value is not mapping) %}
+				<li class="fw-semibold">{{ key }}:</li>
+				{% for nested_value in value %}
+					<li class="px-4">{{ nested_value }}, </li>
 				{% endfor %}
 			{% else %}
-				<li>{{ k }}: {{ v }}</li>
+				<li>{{ key }}: {{ value }}</li>
 			{% endif %}
 		{% endfor %}
 	</ul>
-{#	<ul>#}
-{#		{% for key in (phone_data | list)[:4] %}#}
-{#			<li>{{ key }}: {{ phone_data[key] }}</li>#}
+
+	<ul>
+{#	<li>Brand: {{ phone_data.brand }}</li>#}
+{#	<li>Model: {{ phone_data.model }}</li>#}
+{#	<li>Display: {{ phone_data.display }}"</li>#}
+{#	<li>Year: {{ phone_data.year }}</li>#}
+{#	<li>CPU:</li>#}
+{#		{% for key, value in phone_data.items() %}#}
+{#			<li class="px-5">{{ key }}: {{ value }}</li>#}
 {#		{% endfor %}#}
-{#	{% for k in phone_data["cpu"] %}#}
-{#		{{ k }}: {{ phone_data["cpu"][k] }}#}
-{#	{% endfor %}#}
-{##}
-{#	</ul>#}
+{#	<li>RAM:</li>#}
+{#		{% for key, value in phone_data.ram.items() %}#}
+{#			<li class="px-5">{{ key }}: {{ value }}</li>#}
+{#		{% endfor %}#}
+{#	<li>Wireless:</li>#}
+{#		{% for key, value in phone_data.wireless.items() %}#}
+{#			<li class="px-5">{{ item }}: {{ v }}</li>#}
+{#		{% endfor %}#}
+{#	<li>OS:</li>#}
+{#		{% for key, value in phone_data.os.items() %}#}
+{#			<li class="px-5">{{ key }}: {{ value }}</li>#}
+{#		{% endfor %}#}
+{#	<li>Misc:</li>#}
+{#		{% for item in phone_data.misc %}#}
+{#			<li class="px-5">{{ item }}</li>#}
+{#		{% endfor %}#}
+	</ul>
 
 {% endblock %}

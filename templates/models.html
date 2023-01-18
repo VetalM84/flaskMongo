@@ -1,10 +1,11 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<h1>All from {{ context.brand }}</h1>
-	<ol>
+	<h1>All from {{ context.brand }} in reversed order</h1>
+	<ul>
 		{% for value in context.models %}
 			<li><a href="/{{ context.brand }}/{{ value["model"] }}">{{ value["model"] }}</a></li>
 		{% endfor %}
-	</ol>
+	</ul>
+	<p>Total found: {{ context.cnt }}</p>
 {% endblock %}
