@@ -111,3 +111,15 @@ def get_filtered_results():
             {"year": {"$not": {"$gt": int(request.form["yearRange"])}}}
         )
     return render_template("filter.html", year=year, filtered_data=filtered_data)
+
+
+@main.route("/search", methods=["GET", "POST"])
+def search():
+    """Search by brand or model."""
+    search_result = []
+    if request.method == "POST":
+        search_request = request.form["search"]
+        search_result = phone.find(
+            {"$or": [{"brand": search_request}, {"model": search_request}]}
+        )
+    return render_template("search.html", context=search_result)

@@ -5,9 +5,9 @@
 		<h1 class="h2">Filter</h1>
 		<div class="row">
 			<div class="col p-4">
-				<form method="post" id="yearRangeForm" name="yearRangeForm">
-						<label for="yearRange" class="form-label">Year less than value</label>
-						<input type="range" class="form-range" min="{{ year[0]["min_val"] }}" max="{{ year[0]["max_val"] }}" id="yearRange" name="yearRange">
+				<form method="post" name="yearRangeForm">
+						<label for="yearRangeSlider" class="form-label">Year less than value</label>
+						<input type="range" class="form-range" min="{{ year[0]["min_val"] }}" max="{{ year[0]["max_val"] }}" name="yearRangeSlider">
 						<button type="submit" class="btn btn-primary mt-3">Submit</button>
 				</form>
 			</div>
