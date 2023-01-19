@@ -2,9 +2,8 @@
 
 from operator import itemgetter
 
-from bson import json_util
-from flask import Blueprint, render_template
-
+from flask import Blueprint, render_template, request
+from bson.json_util import dumps, loads
 from app import phone
 
 main = Blueprint("main", __name__)
@@ -87,3 +86,28 @@ def get_single_model(brand: str, model: str):
     return render_template(
         "model.html", phone_data=phone_data, model=model, brand=brand
     )
+
+
+@main.route("/filter", methods=["GET", "POST"])
+def get_filtered_results():
+    """."""
+    year = list(
+        phone.aggregate(
+            [
+                {
+                    "$group": {
+                        "_id": None,
+                        "max_val": {"$max": "$year"},
+                        "min_val": {"$min": "$year"},
+                    }
+                }
+            ]
+        )
+    )
+    filtered_data = []
+
+    if request.method == "POST":
+        filtered_data = phone.find(
+            {"year": {"$not": {"$gt": int(request.form["yearRange"])}}}
+        )
+    return render_template("filter.html", year=year, filtered_data=filtered_data)
