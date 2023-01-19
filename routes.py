@@ -51,9 +51,6 @@ def index():
     brands = list(
         phone.find(projection={"brand": True, "_id": False}).distinct("brand")
     )
-    # print(json_util.dumps(brands))
-    print(brands)
-    print(type(brands))
     return render_template("index.html", context=brands)
 
 
@@ -77,10 +74,6 @@ def get_models(brand: str):
 def get_single_model(brand: str, model: str):
     """."""
     phone_data = phone.find_one({"brand": brand, "model": model})
-    # phone.update(ram={"volume": 16, "meter": "Gb", "type": "DRR4"})
-    # w = Wireless(bluetooth=6.0, gps=True, wifi={"exist": "Dual band", "ghz_24": True, "ghz_5": False})
-    # w = {"wifi": {"exist": "Dual band", "ghz_24": True, "ghz_5": False}}
-    # phone.update(wireless=w)
     print(type(phone), "phone")
     print(type(phone_data), "phone_data")
     return render_template(
@@ -108,7 +101,7 @@ def get_filtered_results():
 
     if request.method == "POST":
         filtered_data = phone.find(
-            {"year": {"$not": {"$gt": int(request.form["yearRange"])}}}
+            {"year": {"$lte": int(request.form["yearRangeSlider"])}}
         )
     return render_template("filter.html", year=year, filtered_data=filtered_data)
 

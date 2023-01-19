@@ -2,22 +2,34 @@
 
 {% block content %}
 	<div class="container text-center">
-		<h1 class="h2">Filter</h1>
+		<h1 class="h2">Filters</h1>
 		<div class="row">
 			<div class="col p-4">
 				<form method="post" name="yearRangeForm">
-						<label for="yearRangeSlider" class="form-label">Year less than value</label>
-						<input type="range" class="form-range" min="{{ year[0]["min_val"] }}" max="{{ year[0]["max_val"] }}" name="yearRangeSlider">
-						<button type="submit" class="btn btn-primary mt-3">Submit</button>
+					<label for="yearRangeSlider" class="form-label">Year is lower or equal a value</label>
+					<p id="rangeValue"></p>
+					<input type="range" class="form-range" min="{{ year[0]["min_val"] }}" max="{{ year[0]["max_val"] }}"
+					       name="yearRangeSlider" id="yearRangeSlider" onchange="updateRangeValue(this.value)">
+					<button type="submit" class="btn btn-primary mt-3">Submit</button>
 				</form>
 			</div>
 		</div>
-	  <div class="row">
-		  {% for value in filtered_data %}
-		    <div class="col p-4">
-			    {{ value }}
-		    </div>
-		  {% endfor %}
-	  </div>
-  </div>
+		<div class="row">
+			{% for value in filtered_data %}
+				<div class="col p-4">
+					{{ value }}
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+
+	<script>
+      function updateRangeValue(val) {
+          document.getElementById('rangeValue').innerText = val;
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+          document.getElementById('rangeValue').innerHTML = document.getElementById('yearRangeSlider').value;
+      });
+	</script>
 {% endblock %}
