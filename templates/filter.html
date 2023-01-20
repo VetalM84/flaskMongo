@@ -8,9 +8,19 @@
 				<form method="post" name="yearRangeForm">
 					<label for="yearRangeSlider" class="form-label">Year is lower or equal a value</label>
 					<p id="rangeValue"></p>
+					<input type=hidden name="filterType" value="slider">
 					<input type="range" class="form-range" min="{{ year[0]["min_val"] }}" max="{{ year[0]["max_val"] }}"
 					       name="yearRangeSlider" id="yearRangeSlider" onchange="updateRangeValue(this.value)">
 					<button type="submit" class="btn btn-primary mt-3">Submit</button>
+				</form>
+			</div>
+			<div class="col p-4">
+				<form method="post" name="yearBetweenForm">
+					<p>Year is between two values</p>
+					<input type=hidden name="filterType" value="range">
+					<input type="text" name="yearStart" id="yearStart" value="{{ year[0]["min_val"] }}">
+					<input type="text" name="yearEnd" id="yearEnd" value="{{ year[0]["max_val"] }}">
+					<button type="submit" class="btn btn-primary">Submit</button>
 				</form>
 			</div>
 		</div>

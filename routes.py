@@ -100,9 +100,20 @@ def get_filtered_results():
     filtered_data = []
 
     if request.method == "POST":
-        filtered_data = phone.find(
-            {"year": {"$lte": int(request.form["yearRangeSlider"])}}
-        )
+        match request.form.get("filterType"):
+            case "slider":
+                filtered_data = phone.find(
+                    {"year": {"$lte": int(request.form["yearRangeSlider"])}}
+                ).sort("brand")
+            case "range":
+                filtered_data = phone.find(
+                    {
+                        "$and": [
+                            {"year": {"$gte": int(request.form["yearStart"])}},
+                            {"year": {"$lte": int(request.form["yearEnd"])}},
+                        ]
+                    }
+                ).sort("brand")
     return render_template("filter.html", year=year, filtered_data=filtered_data)
 
 
