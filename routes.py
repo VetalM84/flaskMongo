@@ -4,7 +4,7 @@ from operator import itemgetter
 
 from bson.json_util import dumps, loads
 from bson.objectid import ObjectId
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect
 
 from app import phone
 
@@ -38,30 +38,24 @@ def index():
     #             },
     #             "GPS": True,
     #         },
-    #         "OS": {
-    #             "name": "Android",
-    #             "version": 13,
-    #         },
-    #
     #     }
     # )
-    # p = Phone(
-    #     brand="Apple", model="iPhone XR", year=2022, display=7
-    # )
-    # p.cpu = CPU(manufacturer="Snapdragon 895", cores=8)
-    # p.save()
     brands = list(
         phone.find(projection={"brand": True, "_id": False}).distinct("brand")
     )
     return render_template("index.html", context=brands)
 
 
-@main.route("/models/<string:brand>")
+@main.route("/models/<string:brand>", methods=["GET", "POST"])
 def get_models(brand: str):
     """A page with a list of models to appropriate brand."""
+    if request.method == "POST" and request.form.get("delete"):
+        phone.delete_one({"_id": ObjectId(request.form.get("delete"))})
+
     models = list(phone.find({"brand": brand}, projection={"model": True}))
     cnt = phone.count_documents({"brand": brand})
     models_list = sorted(models, key=itemgetter("model"), reverse=True)
+
     context = {
         "models": models_list,
         "brand": brand,
@@ -70,12 +64,20 @@ def get_models(brand: str):
     return render_template("models.html", context=context)
 
 
-@main.route("/<phone_id>")
+@main.route("/<string:phone_id>", methods=["GET", "POST"])
 def get_single_model(phone_id):
-    """."""
-    phone_data = phone.find_one({"_id": ObjectId(phone_id)})
-    print(type(phone), "phone")
-    print(type(phone_data), "phone_data")
+    """Get single phone model. Change some parameters on POST."""
+    _id = {"_id": ObjectId(phone_id)}
+    if request.method == "POST":
+        if request.form.get("model"):
+            phone.update_one(_id, {"$set": {"model": request.form["model"]}})
+        if request.form.get("year"):
+            phone.update_one(_id, {"$inc": {"year": int(request.form["year"])}})
+
+    phone_data = phone.find_one(_id)
+
+    print(type(phone_data), "type_phone_data")
+    print(phone_data, "phone_data")
     return render_template("model.html", phone_data=phone_data)
 
 
