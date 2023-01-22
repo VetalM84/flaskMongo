@@ -4,7 +4,7 @@
 	<h1>All from {{ context.brand }} in reversed order</h1>
 	<ul>
 		{% for value in context.models %}
-			<li><a href="/{{ context.brand }}/{{ value["model"] }}">{{ value["model"] }}</a></li>
+			<li><a href="/{{ value["_id"] }}">{{ value["model"] }}</a></li>
 		{% endfor %}
 	</ul>
 	<p>Total found: {{ context.cnt }}</p>

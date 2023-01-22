@@ -2,8 +2,10 @@
 
 from operator import itemgetter
 
-from flask import Blueprint, render_template, request
 from bson.json_util import dumps, loads
+from bson.objectid import ObjectId
+from flask import Blueprint, render_template, request
+
 from app import phone
 
 main = Blueprint("main", __name__)
@@ -57,9 +59,7 @@ def index():
 @main.route("/models/<string:brand>")
 def get_models(brand: str):
     """A page with a list of models to appropriate brand."""
-    models = list(
-        phone.find({"brand": brand}, projection={"model": True, "_id": False})
-    )
+    models = list(phone.find({"brand": brand}, projection={"model": True}))
     cnt = phone.count_documents({"brand": brand})
     models_list = sorted(models, key=itemgetter("model"), reverse=True)
     context = {
@@ -70,15 +70,13 @@ def get_models(brand: str):
     return render_template("models.html", context=context)
 
 
-@main.route("/<string:brand>/<string:model>")
-def get_single_model(brand: str, model: str):
+@main.route("/<phone_id>")
+def get_single_model(phone_id):
     """."""
-    phone_data = phone.find_one({"brand": brand, "model": model})
+    phone_data = phone.find_one({"_id": ObjectId(phone_id)})
     print(type(phone), "phone")
     print(type(phone_data), "phone_data")
-    return render_template(
-        "model.html", phone_data=phone_data, model=model, brand=brand
-    )
+    return render_template("model.html", phone_data=phone_data)
 
 
 @main.route("/filter", methods=["GET", "POST"])

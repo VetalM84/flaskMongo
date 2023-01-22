@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h1 class="h3">{{ brand }} {{ model }}</h1>
+<h1 class="h3">{{ phone_data["brand"] }} {{ phone_data["model"] }}</h1>
 	<ul class="list-unstyled">
 		{% for key, value in phone_data.items() %}
 			{% if value is mapping %}
