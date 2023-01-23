@@ -7,6 +7,7 @@ app = Flask(__name__)
 client = MongoClient("localhost", 27017)
 db = client["Comparison"]
 phone = db["phone"]
+factory = db["factory"]
 
 from routes import main
 

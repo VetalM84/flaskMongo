@@ -2,14 +2,34 @@
 
 {% block content %}
 	<h1>All from {{ context.brand }} in reversed order</h1>
-	<ul>
-		{% for value in context.models %}
-			<li><a href="/{{ value["_id"] }}">{{ value["model"] }}</a></li>
-				<form method="POST" action="">
-					<input type="submit" value="Delete" class="btn btn-primary">
-					<input type="hidden" name="delete" value="{{ value["_id"] }}">
-				</form>
-		{% endfor %}
-	</ul>
+	<table class="table table-striped">
+		<tbody>
+			<tr>
+				<th>Model</th>
+				<th>Assigned to</th>
+				<th>Delete</th>
+				<th>Assign</th>
+			</tr>
+			{% for value in context.models %}
+				<tr>
+					<td><a href="/{{ value["_id"] }}">{{ value["model"] }}</a></td>
+					<td>{{ value["factory_id"] }}</td>
+					<td>
+						<form method="POST" action="">
+							<input type="hidden" name="delete" value="{{ value["_id"] }}">
+							<input type="submit" value="Delete" class="btn btn-primary btn-sm">
+						</form>
+					</td>
+					<td>
+						<form method="POST" action="">
+							<input type="hidden" name="assign" value="{{ value["_id"] }}">
+							<input type="submit" value="Assign" class="btn btn-primary btn-sm">
+						</form>
+					</td>
+				</tr>
+		  {% endfor %}
+      <tr>
+		</tbody>
+	</table>
 	<p>Total found: {{ context.cnt }}</p>
 {% endblock %}

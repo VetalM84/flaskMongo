@@ -6,7 +6,7 @@ from bson.json_util import dumps, loads
 from bson.objectid import ObjectId
 from flask import Blueprint, render_template, request
 
-from app import phone
+from app import phone, factory
 
 main = Blueprint("main", __name__)
 
@@ -49,10 +49,22 @@ def index():
 @main.route("/models/<string:brand>", methods=["GET", "POST"])
 def get_models(brand: str):
     """A page with a list of models to appropriate brand."""
-    if request.method == "POST" and request.form.get("delete"):
-        phone.delete_one({"_id": ObjectId(request.form.get("delete"))})
+    if request.method == "POST":
+        # delete phone
+        if request.form.get("delete"):
+            phone.delete_one({"_id": ObjectId(request.form.get("delete"))})
 
-    models = list(phone.find({"brand": brand}, projection={"model": True}))
+        # assign one-to-many relationship (factory to phone)
+        elif request.form.get("assign"):
+            _id = {"_id": ObjectId(request.form.get("assign"))}
+            factory_1 = factory.find({}).limit(1)
+            phone.update_one(
+                _id, {"$set": {"factory_id": ObjectId(factory_1[0]["_id"])}}
+            )
+
+    models = list(
+        phone.find({"brand": brand}, projection={"model": True, "factory_id": True})
+    )
     cnt = phone.count_documents({"brand": brand})
     models_list = sorted(models, key=itemgetter("model"), reverse=True)
 
@@ -69,10 +81,13 @@ def get_single_model(phone_id):
     """Get single phone model. Change some parameters on POST."""
     _id = {"_id": ObjectId(phone_id)}
     if request.method == "POST":
+        # update model name
         if request.form.get("model"):
             phone.update_one(_id, {"$set": {"model": request.form["model"]}})
+        # increase/decrease year
         if request.form.get("year"):
             phone.update_one(_id, {"$inc": {"year": int(request.form["year"])}})
+        # add new item to array
         if request.form.get("new_misc"):
             phone.update_one(_id, {"$addToSet": {"misc": request.form["new_misc"]}})
 
@@ -83,7 +98,8 @@ def get_single_model(phone_id):
 
 @main.route("/filter", methods=["GET", "POST"])
 def get_filtered_results():
-    """."""
+    """Filter the result list by various parameters."""
+    # get min and max years within all items in DB
     year = list(
         phone.aggregate(
             [
@@ -101,10 +117,12 @@ def get_filtered_results():
 
     if request.method == "POST":
         match request.form.get("filterType"):
+            # filter by year with slider
             case "slider":
                 filtered_data = phone.find(
                     {"year": {"$lte": int(request.form["yearRangeSlider"])}}
                 ).sort("brand")
+            # filter by year within min and max years
             case "range":
                 filtered_data = phone.find(
                     {
