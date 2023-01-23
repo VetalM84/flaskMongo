@@ -56,6 +56,12 @@
 		{% for item in phone_data.misc %}
 			<div class="px-3">{{ item }}</div>
 		{% endfor %}
+		<div class="py-1">Add new misc feature:
+			<form method="POST" action="">
+				<input type="text" name="new_misc" value="">
+				<input type="submit" value="OK" class="btn btn-primary">
+			</form>
+		</div>
 	</div>
 
 {% endblock %}

@@ -4,7 +4,7 @@ from operator import itemgetter
 
 from bson.json_util import dumps, loads
 from bson.objectid import ObjectId
-from flask import Blueprint, render_template, request, redirect
+from flask import Blueprint, render_template, request
 
 from app import phone
 
@@ -73,11 +73,11 @@ def get_single_model(phone_id):
             phone.update_one(_id, {"$set": {"model": request.form["model"]}})
         if request.form.get("year"):
             phone.update_one(_id, {"$inc": {"year": int(request.form["year"])}})
+        if request.form.get("new_misc"):
+            phone.update_one(_id, {"$addToSet": {"misc": request.form["new_misc"]}})
 
     phone_data = phone.find_one(_id)
 
-    print(type(phone_data), "type_phone_data")
-    print(phone_data, "phone_data")
     return render_template("model.html", phone_data=phone_data)
 
 
