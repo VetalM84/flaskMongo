@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<div class="container text-center">
+		<h1 class="h2">Transaction</h1>
+		  <div class="row">
+			  <table class="table table-striped">
+			 		<tbody>
+			 			<tr>
+			 				<th>Factory</th>
+			 				<th>Stock</th>
+			 				<th>Amount to transfer</th>
+			 			</tr>
+			 			{% for value in context %}
+			 				<tr>
+			 					<td>{{ value["Name"] }}</td>
+			 					<td>{{ value["Stock"] }}</td>
+			 					<td>
+			 						<form method="POST" action="">
+			 							<input type="hidden" name="to_factory" value="{{ value["_id"] }}">
+			 							<input type="text" name="amount" value="">
+			 							<input type="submit" value="OK" class="btn btn-primary btn-sm">
+			 						</form>
+			 					</td>
+			 				</tr>
+			 		  {% endfor %}
+			       <tr>
+			 		</tbody>
+			 	</table>
+		  </div>
+  </div>
+{% endblock %}

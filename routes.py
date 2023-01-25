@@ -6,7 +6,7 @@ from bson.json_util import dumps, loads
 from bson.objectid import ObjectId
 from flask import Blueprint, render_template, request
 
-from app import phone, factory
+from app import phone, factory, transaction, client
 
 main = Blueprint("main", __name__)
 
@@ -145,3 +145,39 @@ def search():
             {"$or": [{"brand": search_request}, {"model": search_request}]}
         )
     return render_template("search.html", context=search_result)
+
+
+@main.route("/transaction", methods=["GET", "POST"])
+def make_transaction():
+    """Make a transaction. Transfer certain amount from one factory to another."""
+    if request.method == "POST":
+
+        def callback(db_session):
+            """."""
+            factories_collection = db_session.client["Comparison"]["factory"]
+            transactions_collection = db_session.client["Comparison"]["transaction"]
+            amount = int(request.form.get("amount"))
+            to_factory = request.form.get("to_factory")
+
+            new_transaction = {
+                "from_factory": "63ce6de1bb597dea345436df",
+                "to_factory": to_factory,
+                "amount": amount,
+            }
+            factories_collection.update_one(
+                {"_id": ObjectId("63ce6de1bb597dea345436df")},
+                {"$inc": {"Stock": -amount}},
+                session=db_session,
+            )
+            factories_collection.update_one(
+                {"_id": ObjectId(to_factory)},
+                {"$inc": {"Stock": amount}},
+                session=db_session,
+            )
+            transactions_collection.insert_one(new_transaction, session=db_session)
+
+        with client.start_session() as session:
+            session.with_transaction(callback)
+
+    factories = factory.find({})
+    return render_template("transaction.html", context=factories)
