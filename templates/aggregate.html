@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<div class="container text-center">
+		<h1 class="h2">Aggregation results</h1>
+		  <div class="row">
+			  {% for value in context %}
+			    <div class="col">
+		  <ul>
+				    <li>Factory: {{ value["Name"] }}</li>
+				    <li>Phones:</li>
+			      {% for phone in value["phones"] %}
+				      <li class="px-3">
+							  {{ phone["brand"] }} {{ phone["model"] }}
+				      </li>
+				    {% endfor %}
+		  </ul>
+			    </div>
+			  {% endfor %}
+		  </div>
+  </div>
+{% endblock %}

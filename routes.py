@@ -6,7 +6,7 @@ from bson.json_util import dumps, loads
 from bson.objectid import ObjectId
 from flask import Blueprint, render_template, request
 
-from app import phone, factory, transaction, client
+from app import phone, factory, client
 
 main = Blueprint("main", __name__)
 
@@ -41,7 +41,7 @@ def index():
     #     }
     # )
     brands = list(
-        phone.find(projection={"brand": True, "_id": False}).distinct("brand")
+        phone.find({}, projection={"brand": True, "_id": False}).distinct("brand")
     )
     return render_template("index.html", context=brands)
 
@@ -145,6 +145,26 @@ def search():
             {"$or": [{"brand": search_request}, {"model": search_request}]}
         )
     return render_template("search.html", context=search_result)
+
+
+@main.route("/aggregate")
+def aggregation():
+    result = list(
+        factory.aggregate(
+            [
+                {
+                    "$lookup": {
+                        "from": "phone",
+                        "localField": "_id",
+                        "foreignField": "factory_id",
+                        "as": "phones",
+                    }
+                }
+            ]
+        )
+    )
+    print(list(result))
+    return render_template("aggregate.html", context=result)
 
 
 @main.route("/transaction", methods=["GET", "POST"])
