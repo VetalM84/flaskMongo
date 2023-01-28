@@ -6,15 +6,16 @@
 		  <div class="row">
 			  {% for value in context %}
 			    <div class="col">
-		  <ul>
-				    <li>Factory: {{ value["Name"] }}</li>
-				    <li>Phones:</li>
-			      {% for phone in value["phones"] %}
-				      <li class="px-3">
-							  {{ phone["brand"] }} {{ phone["model"] }}
-				      </li>
-				    {% endfor %}
-		  </ul>
+					  <ul>
+					    <li>Factory: {{ value["Name"] }}</li>
+					    <li>Phones:</li>
+				      {% for phone in value["phones"] %}
+					      <li class="px-3">
+								  {{ phone["brand"] }} {{ phone["model"] }}
+					      </li>
+					    {% endfor %}
+					  <li>Total: {{ value["total"] }}</li>
+				  </ul>
 			    </div>
 			  {% endfor %}
 		  </div>

@@ -159,6 +159,14 @@ def aggregation():
                         "foreignField": "factory_id",
                         "as": "phones",
                     }
+                },
+                {
+                    "$addFields": {
+                        "total": {"$size": "$phones"}
+                    }
+                },
+                {
+                    "$project": {"stock": 0, "_id": 0, "phones": {"_id": 0}}
                 }
             ]
         )
