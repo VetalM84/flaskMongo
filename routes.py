@@ -14,32 +14,6 @@ main = Blueprint("main", __name__)
 @main.route("/")
 def index():
     """Main page with a list of brands."""
-    # phone.insert_one(
-    #     {
-    #         "brand": "Samsung",
-    #         "model": "Galaxy S14",
-    #         "year": 2022,
-    #         "CPU": {
-    #             "manufacturer": "Snapdragon 895",
-    #             "cores": 16,
-    #         },
-    #         "RAM": {
-    #             "volume": 16,
-    #             "meter": "Gb",
-    #             "type": "DRR4",
-    #         },
-    #         "display": 7,
-    #         "wireless": {
-    #             "Bluetooth": 6.0,
-    #             "WIFI": {
-    #                 "type": "Dual band",
-    #                 "2.5 GHz": True,
-    #                 "5 GHz": True,
-    #             },
-    #             "GPS": True,
-    #         },
-    #     }
-    # )
     brands = list(
         phone.find({}, projection={"brand": True, "_id": False}).distinct("brand")
     )
@@ -160,17 +134,26 @@ def aggregation():
                         "as": "phones",
                     }
                 },
-                {
-                    "$addFields": {
-                        "total": {"$size": "$phones"}
-                    }
-                },
-                {
-                    "$project": {"stock": 0, "_id": 0, "phones": {"_id": 0}}
-                }
+                {"$addFields": {"total": {"$size": "$phones"}}},
+                {"$project": {"stock": 0, "_id": 0, "phones": {"_id": 0}}},
             ]
         )
     )
+    # result = phone.aggregate(
+    #     [
+    #         {"$match": {}},
+    #         {
+    #             "$group": {
+    #                 "_id": "$brand",
+    #                 "cnt": {
+    #                     "$sum": {
+    #                         "$cond": [{"$eq": [{"$type": "$model"}, "string"]}, 1, 0]
+    #                     }
+    #                 },
+    #             }
+    #         },
+    #     ]
+    # )
     print(list(result))
     return render_template("aggregate.html", context=result)
 
