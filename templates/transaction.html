@@ -13,8 +13,8 @@
 			 			</tr>
 			 			{% for value in context %}
 			 				<tr>
-			 					<td>{{ value["Name"] }}</td>
-			 					<td>{{ value["Stock"] }}</td>
+			 					<td>{{ value["name"] }}</td>
+			 					<td>{{ value["stock"] }}</td>
 			 					<td>
 			 						<form method="POST" action="">
 			 							<input type="hidden" name="to_factory" value="{{ value["_id"] }}">

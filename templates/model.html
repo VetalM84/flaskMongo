@@ -2,24 +2,6 @@
 
 {% block content %}
 	<h1 class="h3">{{ phone_data["brand"] }} {{ phone_data["model"] }}</h1>
-	{#	<ul class="list-unstyled">#}
-	{#		{% for key, value in phone_data.items() %}#}
-	{#			{% if value is mapping %}#}
-	{#				<li class="fw-semibold">{{ key }}:</li>#}
-	{#				{% for nested_value in value %}#}
-	{#					<li class="px-4">{{ nested_value }}: {{ value[nested_value] }}</li>#}
-	{#				{% endfor %}#}
-	{#			{% elif value is iterable and (value is not string and value is not mapping) %}#}
-	{#				<li class="fw-semibold">{{ key }}:</li>#}
-	{#				{% for nested_value in value %}#}
-	{#					<li class="px-4">{{ nested_value }}, </li>#}
-	{#				{% endfor %}#}
-	{#			{% else %}#}
-	{#				<li>{{ key }}: {{ value }}</li>#}
-	{#			{% endif %}#}
-	{#		{% endfor %}#}
-	{#	</ul>#}
-
 	<div class="raw">
 		<div class="py-1">Brand: {{ phone_data.brand }}</div>
 		<div class="py-1">Model:
@@ -28,7 +10,6 @@
 				<input type="submit" value="OK" class="btn btn-primary">
 			</form>
 		</div>
-		<div class="py-1">Display: {{ phone_data.display }}"</div>
 		<div class="py-1">Year: {{ phone_data.year }}
 			<form method="POST" action="">
 				<label>Increase/decrease year by:<br>
@@ -40,17 +21,6 @@
 		<div class="py-1">CPU:</div>
 		{% for key, value in phone_data.cpu.items() %}
 			<div class="px-3">{{ key }}: {{ value }}</div>
-		{% endfor %}
-		<div class="py-1">RAM:</div>
-		{% for key, value in phone_data.ram.items() %}
-			<div class="px-3">{{ key }}: {{ value }}</div>
-		{% endfor %}
-		<div class="py-1">Wireless:</div>
-		{% for key, value in phone_data.wireless.items() %}
-			<div class="px-3">{{ key }}: {{ value }}</div>
-			{% for k, v in value.items() %}
-				<div class="px-5">{{ k }}: {{ v }}</div>
-			{% endfor %}
 		{% endfor %}
 		<div class="py-1">Misc:</div>
 		{% for item in phone_data.misc %}

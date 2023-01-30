@@ -6,7 +6,7 @@ from bson.json_util import dumps, loads
 from bson.objectid import ObjectId
 from flask import Blueprint, render_template, request
 
-from app import phone, factory, client
+from app import client, factory, phone
 
 main = Blueprint("main", __name__)
 
@@ -123,6 +123,7 @@ def search():
 
 @main.route("/aggregate")
 def aggregation():
+    """Aggregation example."""
     result = list(
         factory.aggregate(
             [
@@ -177,12 +178,12 @@ def make_transaction():
             }
             factories_collection.update_one(
                 {"_id": ObjectId("63ce6de1bb597dea345436df")},
-                {"$inc": {"Stock": -amount}},
+                {"$inc": {"stock": -amount}},
                 session=db_session,
             )
             factories_collection.update_one(
                 {"_id": ObjectId(to_factory)},
-                {"$inc": {"Stock": amount}},
+                {"$inc": {"stock": amount}},
                 session=db_session,
             )
             transactions_collection.insert_one(new_transaction, session=db_session)
