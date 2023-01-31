@@ -98,7 +98,7 @@ def get_models(brand: str):
             )
 
     models = list(
-        phone.find({"brand": brand}, projection={"model": True, "factory_id": True})
+        phone.find({"brand": brand}, projection={"model": True, "image": True, "factory_id": True})
     )
     cnt = phone.count_documents({"brand": brand})
     models_list = sorted(models, key=itemgetter("model"), reverse=True)

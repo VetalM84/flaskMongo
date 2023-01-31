@@ -5,6 +5,7 @@
 	<table class="table table-striped">
 		<tbody>
 			<tr>
+				<th>Image</th>
 				<th>Model</th>
 				<th>Assigned to</th>
 				<th>Delete</th>
@@ -12,6 +13,7 @@
 			</tr>
 			{% for value in context.models %}
 				<tr>
+					<td><img src="{{ value["image"] }}" width="50" alt="image"></td>
 					<td><a href="/{{ value["_id"] }}">{{ value["model"] }}</a></td>
 					<td>{{ value["factory_id"] }}</td>
 					<td>
