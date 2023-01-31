@@ -1,32 +1,64 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<div class="container text-center">
-		<h1 class="h2">Transaction</h1>
-		  <div class="row">
-			  <table class="table table-striped">
-			 		<tbody>
-			 			<tr>
-			 				<th>Factory</th>
-			 				<th>Stock</th>
-			 				<th>Amount to transfer</th>
-			 			</tr>
-			 			{% for value in context %}
-			 				<tr>
-			 					<td>{{ value["name"] }}</td>
-			 					<td>{{ value["stock"] }}</td>
-			 					<td>
-			 						<form method="POST" action="">
-			 							<input type="hidden" name="to_factory" value="{{ value["_id"] }}">
-			 							<input type="text" name="amount" value="">
-			 							<input type="submit" value="OK" class="btn btn-primary btn-sm">
-			 						</form>
-			 					</td>
-			 				</tr>
-			 		  {% endfor %}
-			       <tr>
-			 		</tbody>
-			 	</table>
-		  </div>
-  </div>
+	<h1 class="h2">Transaction</h1>
+	<div class="row">
+
+		<form class="py-3" method="POST" action="">
+			<label>From factory
+				<select name="from_factory_id">
+					{% for factory in context.factories %}
+						<option value="{{ factory["_id"] }}">{{ factory["name"] }}</option>
+					{% endfor %}
+				</select>
+			</label>
+			<label>To factory
+				<select name="to_factory_id">
+					{% for factory in context.factories %}
+						<option value="{{ factory["_id"] }}">{{ factory["name"] }}</option>
+					{% endfor %}
+				</select>
+			</label>
+			<label>Amount to transfer
+				<input type="text" name="amount" value="">
+			</label>
+			<input type="submit" value="Submit" class="btn btn-primary btn-sm">
+		</form>
+
+		<table class="table table-striped">
+			<tbody>
+			<tr>
+				<th>Factory</th>
+				<th>Stock</th>
+			</tr>
+			{% for value in context.factories %}
+				<tr>
+					<td>{{ value["name"] }}</td>
+					<td>{{ value["stock"] }}</td>
+				</tr>
+			{% endfor %}
+			<tr>
+			</tbody>
+		</table>
+		<h2 class="h3">Finished transactions</h2>
+		<table class="table table-striped">
+			<tbody>
+			<tr>
+				<th>From factory</th>
+				<th>To factory</th>
+				<th>Amount</th>
+				<th>Date</th>
+			</tr>
+			{% for value in context.transactions %}
+				<tr>
+					<td>{{ value["from_factory"][0]["name"] }}</td>
+					<td>{{ value["to_factory"][0]["name"] }}</td>
+					<td>{{ value["amount"] }}</td>
+					<td>{{ value["date"] }}</td>
+				</tr>
+			{% endfor %}
+			<tr>
+			</tbody>
+		</table>
+	</div>
 {% endblock %}

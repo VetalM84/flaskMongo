@@ -1,12 +1,11 @@
 """Routes."""
-
+from datetime import datetime
 from operator import itemgetter
 
-from bson.json_util import dumps, loads
 from bson.objectid import ObjectId
 from flask import Blueprint, render_template, request
 
-from app import client, factory, phone
+from app import client, factory, phone, transaction
 
 main = Blueprint("main", __name__)
 
@@ -95,12 +94,6 @@ def get_models(brand: str):
             factory_id = ObjectId(request.form.get("factory_id"))
             phone.update_one(_id, {"$set": {"factory_id": factory_id}})
 
-    # models = list(
-    #     phone.find(
-    #         {"brand": brand},
-    #         projection={"model": True, "image": True, "factory_id": True},
-    #     )
-    # )
     models = phone.aggregate(
         [
             {"$match": {"brand": brand}},
@@ -253,31 +246,68 @@ def make_transaction():
     if request.method == "POST":
 
         def callback(db_session):
-            """."""
+            """Transaction wrapper."""
             factories_collection = db_session.client["Comparison"]["factory"]
             transactions_collection = db_session.client["Comparison"]["transaction"]
+            from_factory_id = request.form.get("from_factory_id")
+            to_factory_id = request.form.get("to_factory_id")
             amount = int(request.form.get("amount"))
-            to_factory = request.form.get("to_factory")
 
             new_transaction = {
-                "from_factory": "63ce6de1bb597dea345436df",
-                "to_factory": to_factory,
+                "from_factory_id": ObjectId(from_factory_id),
+                "to_factory_id": ObjectId(to_factory_id),
                 "amount": amount,
+                "date": datetime.strftime(datetime.now(), "%Y-%m-%dT%H:%M:%S.000Z"),
             }
             factories_collection.update_one(
-                {"_id": ObjectId("63ce6de1bb597dea345436df")},
+                {"_id": ObjectId(from_factory_id)},
                 {"$inc": {"stock": -amount}},
                 session=db_session,
             )
             factories_collection.update_one(
-                {"_id": ObjectId(to_factory)},
+                {"_id": ObjectId(to_factory_id)},
                 {"$inc": {"stock": amount}},
                 session=db_session,
             )
             transactions_collection.insert_one(new_transaction, session=db_session)
 
+        # start transaction
         with client.start_session() as session:
             session.with_transaction(callback)
 
-    factories = factory.find({})
-    return render_template("transaction.html", context=factories)
+    factories = list(factory.find({}))
+    transactions = list(
+        transaction.aggregate(
+            [
+                {
+                    "$lookup": {
+                        "from": "factory",
+                        "localField": "from_factory_id",
+                        "foreignField": "_id",
+                        "as": "from_factory",
+                    }
+                },
+                {
+                    "$lookup": {
+                        "from": "factory",
+                        "localField": "to_factory_id",
+                        "foreignField": "_id",
+                        "as": "to_factory",
+                    }
+                },
+                {
+                    "$project": {
+                        "_id": 0,
+                        "amount": 1,
+                        "date": 1,
+                        "from_factory": {"name": 1},
+                        "to_factory": {"name": 1},
+                    }
+                },
+            ]
+        )
+    )
+    return render_template(
+        "transaction.html",
+        context={"factories": factories, "transactions": transactions},
+    )
