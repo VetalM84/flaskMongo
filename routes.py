@@ -14,6 +14,67 @@ main = Blueprint("main", __name__)
 @main.route("/")
 def index():
     """Main page with a list of brands."""
+    # phone.insert_many([
+    #     {
+    #         "brand": "Samsung",
+    #         "model": "Galaxy S18",
+    #         "year": 2020,
+    #         "image": "https://smartphonemodel.com/wp-content/uploads/2020/01/Samsung-Galaxy-S18.jpg",
+    #         "CPU": {
+    #             "manufacturer": "Snapdragon 725",
+    #             "cores": 8,
+    #         },
+    #         "misc": ["GPS", "Wifi"]
+    #     },
+    #     {
+    #         "brand": "Apple",
+    #         "model": "iPhone XR",
+    #         "year": 2016,
+    #         "image": "https://apple-mania.com.ua/media/catalog/product/cache/e026f651b05122a6916299262b60c47d/a/p/apple-iphone-xr-yellow_1.png",
+    #         "CPU": {
+    #             "manufacturer": "A12 Bionic",
+    #             "cores": 10,
+    #         },
+    #         "misc": ["Bluetooth 5.0", "NFC"]
+    #     },
+    #     {
+    #         "brand": "Apple",
+    #         "model": "iPhone SE",
+    #         "year": 2010,
+    #         "image": "https://www.ixbt.com/img/n1/news/2021/3/3/Ez9zhLUXsAEbBcq_large.jpg",
+    #         "CPU": {
+    #             "manufacturer": "A8",
+    #             "cores": 4,
+    #         },
+    #     },
+    #     {
+    #         "brand": "Motorola",
+    #         "model": "Moto E",
+    #         "year": 2012,
+    #         "image": "https://i.citrus.world/imgcache/size_800/uploads/shop/a/1/a1335892123d3204f27798192ba7e7d3.jpg",
+    #         "CPU": {
+    #             "manufacturer": "Mediatek 200",
+    #             "cores": 4,
+    #         },
+    #         "misc": ["GPS", "Wifi"]
+    #     },
+    #
+    # ])
+
+    # factory.insert_many([
+    #     {
+    #         "name": "Foxconn",
+    #         "stock": 1000,
+    #     },
+    #     {
+    #         "name": "Samsung",
+    #         "stock": 2000,
+    #     },
+    #     {
+    #         "name": "Biostar",
+    #         "stock": 99,
+    #     },
+    # ])
     brands = list(
         phone.find({}, projection={"brand": True, "_id": False}).distinct("brand")
     )

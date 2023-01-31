@@ -2,35 +2,40 @@
 
 {% block content %}
 	<h1 class="h3">{{ phone_data["brand"] }} {{ phone_data["model"] }}</h1>
-	<div class="raw">
-		<div class="py-1">Brand: {{ phone_data.brand }}</div>
-		<div class="py-1">Model:
-			<form method="POST" action="">
-				<input type="text" name="model" value="{{ phone_data.model }}">
-				<input type="submit" value="OK" class="btn btn-primary">
-			</form>
+	<div class="row align-items-start">
+		<div class="col">
+			<div class="py-1">Brand: {{ phone_data.brand }}</div>
+			<div class="py-1">Model:
+				<form method="POST" action="">
+					<input type="text" name="model" value="{{ phone_data.model }}">
+					<input type="submit" value="OK" class="btn btn-primary">
+				</form>
+			</div>
+			<div class="py-1">Year: {{ phone_data.year }}
+				<form method="POST" action="">
+					<label>Increase/decrease year by:<br>
+						<input type="number" name="year" value="">
+					</label>
+					<input type="submit" value="OK" class="btn btn-primary">
+				</form>
+			</div>
+			<div class="py-1">CPU:</div>
+			{% for key, value in phone_data.CPU.items() %}
+				<div class="px-3">{{ key }}: {{ value }}</div>
+			{% endfor %}
+			<div class="py-1">Misc:</div>
+			{% for item in phone_data.misc %}
+				<div class="px-3">{{ item }}</div>
+			{% endfor %}
+			<div class="py-1">Add new misc feature:
+				<form method="POST" action="">
+					<input type="text" name="new_misc" value="">
+					<input type="submit" value="OK" class="btn btn-primary">
+				</form>
+			</div>
 		</div>
-		<div class="py-1">Year: {{ phone_data.year }}
-			<form method="POST" action="">
-				<label>Increase/decrease year by:<br>
-					<input type="number" name="year" value="">
-				</label>
-				<input type="submit" value="OK" class="btn btn-primary">
-			</form>
-		</div>
-		<div class="py-1">CPU:</div>
-		{% for key, value in phone_data.cpu.items() %}
-			<div class="px-3">{{ key }}: {{ value }}</div>
-		{% endfor %}
-		<div class="py-1">Misc:</div>
-		{% for item in phone_data.misc %}
-			<div class="px-3">{{ item }}</div>
-		{% endfor %}
-		<div class="py-1">Add new misc feature:
-			<form method="POST" action="">
-				<input type="text" name="new_misc" value="">
-				<input type="submit" value="OK" class="btn btn-primary">
-			</form>
+		<div class="col">
+			<img src="{{ phone_data.image }}" width="300" alt="image">
 		</div>
 	</div>
 
