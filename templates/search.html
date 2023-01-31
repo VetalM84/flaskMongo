@@ -3,12 +3,17 @@
 {% block content %}
 	<div class="container text-center">
 		<h1 class="h2">Search results</h1>
-		  <div class="row">
-			  {% for value in context %}
-			    <div class="col">
-				    {{ value }}
+	  <div class="row">
+		  {% for value in context %}
+		    <div class="col">
+		      <div>
+			      <a href="/{{ value._id }}"><img src="{{ value.image }}" width="150" alt="image"></a>
 			    </div>
-			  {% endfor %}
-		  </div>
+				  <div>Brand: {{ value.brand }}</div>
+			    <div>Model: <a href="/{{  value._id }}">{{ value.model }}</a></div>
+					<div>Year: {{ value.year }}</div>
+		    </div>
+		  {% endfor %}
+	  </div>
   </div>
 {% endblock %}

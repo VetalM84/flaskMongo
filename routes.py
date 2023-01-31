@@ -172,12 +172,17 @@ def get_filtered_results():
 
 @main.route("/search", methods=["GET", "POST"])
 def search():
-    """Search by brand or model."""
+    """Case intensive search by brand or model."""
     search_result = []
     if request.method == "POST":
         search_request = request.form["search"]
         search_result = phone.find(
-            {"$or": [{"brand": search_request}, {"model": search_request}]}
+            {
+                "$or": [
+                    {"brand": {"$regex": search_request, "$options": "-i"}},
+                    {"model": {"$regex": search_request, "$options": "-i"}},
+                ]
+            }
         )
     return render_template("search.html", context=search_result)
 
