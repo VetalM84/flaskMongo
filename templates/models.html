@@ -9,13 +9,17 @@
 				<th>Model</th>
 				<th>Assigned to</th>
 				<th>Delete</th>
-				<th>Assign</th>
+				<th>Assign to</th>
 			</tr>
 			{% for value in context.models %}
 				<tr>
 					<td><img src="{{ value["image"] }}" width="50" alt="image"></td>
 					<td><a href="/{{ value["_id"] }}">{{ value["model"] }}</a></td>
-					<td>{{ value["factory_id"] }}</td>
+					<td>
+						{% if value["factory"] %}
+							{{ value["factory"]["name"] }}
+						{% endif %}
+					</td>
 					<td>
 						<form method="POST" action="">
 							<input type="hidden" name="delete" value="{{ value["_id"] }}">
@@ -24,8 +28,13 @@
 					</td>
 					<td>
 						<form method="POST" action="">
-							<input type="hidden" name="assign" value="{{ value["_id"] }}">
-							<input type="submit" value="Assign" class="btn btn-primary btn-sm">
+							<select name="factory_id">
+								{% for factory in context.factories %}
+									<option value="{{ factory["_id"] }}">{{ factory["name"] }}</option>
+								{% endfor %}
+							</select>
+							<input type="hidden" name="phone_id" value="{{ value["_id"] }}">
+							<input type="submit" value="Submit" class="btn btn-primary btn-sm">
 						</form>
 					</td>
 				</tr>

@@ -90,20 +90,42 @@ def get_models(brand: str):
             phone.delete_one({"_id": ObjectId(request.form.get("delete"))})
 
         # assign one-to-many relationship (factory to phone)
-        elif request.form.get("assign"):
-            _id = {"_id": ObjectId(request.form.get("assign"))}
-            factory_1 = factory.find({}).limit(1)
-            phone.update_one(
-                _id, {"$set": {"factory_id": ObjectId(factory_1[0]["_id"])}}
-            )
+        elif request.form.get("phone_id") and request.form.get("factory_id"):
+            _id = {"_id": ObjectId(request.form.get("phone_id"))}
+            factory_id = ObjectId(request.form.get("factory_id"))
+            phone.update_one(_id, {"$set": {"factory_id": factory_id}})
 
-    models = list(
-        phone.find({"brand": brand}, projection={"model": True, "image": True, "factory_id": True})
+    # models = list(
+    #     phone.find(
+    #         {"brand": brand},
+    #         projection={"model": True, "image": True, "factory_id": True},
+    #     )
+    # )
+    models = phone.aggregate(
+        [
+            {"$match": {"brand": brand}},
+            {
+                "$lookup": {
+                    "from": "factory",
+                    "localField": "factory_id",
+                    "foreignField": "_id",
+                    "as": "factories",
+                }
+            },
+            {
+                "$project": {
+                    "model": True,
+                    "image": True,
+                    "factory": {"$arrayElemAt": ["$factories", 0]},
+                }
+            },
+        ]
     )
     cnt = phone.count_documents({"brand": brand})
     models_list = sorted(models, key=itemgetter("model"), reverse=True)
-
+    factories = list(factory.find({}))
     context = {
+        "factories": factories,
         "models": models_list,
         "brand": brand,
         "cnt": cnt,
