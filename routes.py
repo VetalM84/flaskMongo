@@ -257,7 +257,7 @@ def make_transaction():
                 "from_factory_id": ObjectId(from_factory_id),
                 "to_factory_id": ObjectId(to_factory_id),
                 "amount": amount,
-                "date": datetime.strftime(datetime.now(), "%Y-%m-%dT%H:%M:%S.000Z"),
+                "date": datetime.utcnow(),
             }
             factories_collection.update_one(
                 {"_id": ObjectId(from_factory_id)},

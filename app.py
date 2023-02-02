@@ -6,8 +6,11 @@ from flask import Flask
 from pymongo import MongoClient
 from pymongo.errors import CollectionInvalid
 
-from validation_schema import (factory_validation_schema,
-                               phone_validation_schema)
+from validation_schema import (
+    factory_validation_schema,
+    phone_validation_schema,
+    transaction_validation_schema,
+)
 
 load_dotenv()
 
@@ -26,7 +29,9 @@ def create_db_collection(collection_name: str, validator: dict = None):
 
 create_db_collection(collection_name="phone", validator=phone_validation_schema)
 create_db_collection(collection_name="factory", validator=factory_validation_schema)
-create_db_collection(collection_name="transaction")
+create_db_collection(
+    collection_name="transaction", validator=transaction_validation_schema
+)
 
 phone = db.get_collection("phone")
 factory = db.get_collection("factory")
