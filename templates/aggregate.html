@@ -1,23 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<div class="container text-center">
+	<div class="container text-start">
 		<h1 class="h2">Aggregation results</h1>
-		  <div class="row">
-			  {% for value in context %}
-			    <div class="col">
-					  <ul>
-					    <li>Factory: {{ value["Name"] }}</li>
-					    <li>Phones:</li>
-				      {% for phone in value["phones"] %}
-					      <li class="px-3">
-								  {{ phone["brand"] }} {{ phone["model"] }}
-					      </li>
-					    {% endfor %}
-					  <li>Total: {{ value["total"] }}</li>
-				  </ul>
-			    </div>
-			  {% endfor %}
-		  </div>
-  </div>
+		<div class="row">
+			{% for value in context %}
+				<div class="col">
+					<div class="py-2"><strong>Factory</strong>: {{ value["name"] }}</div>
+					<div class="fw-bold">Assigned phones:</div>
+					{% for phone in value["phones"] %}
+						<div class="px-3">{{ phone["brand"] }} {{ phone["model"] }}</div>
+					{% endfor %}
+					<div class="py-2"><strong>Total:</strong> {{ value["total"] }}</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
 {% endblock %}
