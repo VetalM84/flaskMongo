@@ -221,22 +221,6 @@ def aggregation():
             ]
         )
     )
-    # result = phone.aggregate(
-    #     [
-    #         {"$match": {}},
-    #         {
-    #             "$group": {
-    #                 "_id": "$brand",
-    #                 "cnt": {
-    #                     "$sum": {
-    #                         "$cond": [{"$eq": [{"$type": "$model"}, "string"]}, 1, 0]
-    #                     }
-    #                 },
-    #             }
-    #         },
-    #     ]
-    # )
-    print(list(result))
     return render_template("aggregate.html", context=result)
 
 
