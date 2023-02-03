@@ -46,6 +46,7 @@ phone_validation_schema = {
             "misc": {
                 "bsonType": "array",
                 "description": "a list of strings",
+                "minItems": 1,
                 "uniqueItems": True,
                 "items": {
                     "bsonType": "string",
